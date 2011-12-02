@@ -1,0 +1,376 @@
+#!/usr/bin/env perl
+
+use utf8;
+use 5.014;
+use strict;
+use warnings;
+use DBI;
+use Text::CSV::Encoded;
+use Text::CSV_XS;
+use Data::Dumper;
+use File::Basename;
+
+die unless @ARGV == 4;
+my $master_lookup_file   = shift;
+my $serial_local_id_file = shift;
+my $target_header_file   = shift;
+my $target_data_file     = shift;
+
+my $pat_localid = qr/^\d{8}$/;
+my $pat_serial  = qr/^\w{1,2}\d{6}$/;
+my $main_serial  = qr/^\d{5}$/;
+
+#my $master_lookup_file   = '../csv/lookup.csv'; # %master
+#my $serial_local_id_file = '../csv/precombat_logfail-mapping/file-localid.csv'; # %serial_localid
+#my $target_header_file   = '../csv/precombat_logfail-mapping/file-header.csv';
+#my $target_data_file = '../csv/precombat_logfail-mapping/precombat_logfail-mapping_C02_MdedicalHistoryRiskFactor.csv';
+
+my $target_table ='';
+
+my $master         = load_master($master_lookup_file);
+my $serial_localid = load_localid($serial_local_id_file);
+my $meta           = load_header($target_header_file);
+
+my @type_a_pattern = qw/
+    C01_SubjectList
+    C02_MedicalHistoryRiskFactor
+    C03_DiagnosisExam
+    C04_PatientLevelInformation
+    C05_LeftMainLesionData
+    C07_MedicationData
+    C09_InHospital_Laboratory
+    C10_InHospital_Outcomes
+    E01_Bleeding
+    E03_Death
+    E04_MI
+    E05_RepeatRevascularization
+    C02_AdmissionData
+    C03_RiskFactorHistory
+    C04_NonlnvasiveTest
+    C05_IndexProcedureData
+    C06_TargetLeftmainData
+    C08_AntiplateletelInhospital
+    C09_AntiplateleteFollowUp
+    C10_OtherConcomitant
+    C11_DischargeData
+    C12_LaboratoryData
+    E01_Death
+    E02_MyocardialInfarction
+    E03_RepeatRevascularization
+    E04_StentThrombosis
+    E05_CerebralVascularAccident
+    E06_Bleeding
+    AMC-main-compare-mapping
+    BMS-DES-CABG-list
+/;
+
+my @type_b_pattern = qw/
+    C11_FU_outcomes
+    C12_FU_AngiographicData
+    C13_ClinicalFollowUp
+    C14_AngiographicFunctionalTe
+/;
+
+
+# target_table =
+# $target_header_file{ column_name } => [ TABLE_NAME, COLUMN_NAME ]
+# %target_data{ serial } => [
+#
+# ]
+#my $target_data_file = '../csv/precombat_logfail-mapping/precombat_logfail-mapping_C01_SubjectList.csv';
+
+my @rows;
+my $csv = Text::CSV_XS->new(
+    {
+        binary       => 1,
+        eol          => $/,
+        always_quote => 1
+    }
+) or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+
+open my $fh, "<:encoding(utf8)", $target_data_file
+  or die "$target_data_file: $!";
+
+my $header = $csv->getline($fh);
+$csv->column_names(@$header);
+
+my $dbh = DBI->connect(
+    "DBI:mysql:database=rum-test;host=localhost",
+    "rumidier",
+    "rumidier",
+    {
+        RaiseError => 1,
+        AutoCommit => 1,
+    }
+);
+$dbh->do("set names utf8");
+
+my %lookup_basename;
+my $futestno;
+while ( my $row = $csv->getline_hr($fh) ) {
+    my $target_table = get_type($target_data_file);
+
+    given ($target_table) {
+        my $old_serial = $row->{serial};
+        my $localid    = $serial_localid->{$old_serial};
+        my $serial     = $master->{$localid};
+        my $lab_id     = 1;
+        my $status     = 'INCOMPLETE';
+
+        when (@type_a_pattern) {
+            say "[DEBUG]: $target_header_file $target_data_file";
+
+            foreach my $key (@$header) {
+                next if $key eq 'serial';
+                die $key unless $meta->{$key};
+                my $table  = ${ $meta->{$key} }[0];
+                my $column = ${ $meta->{$key} }[1];
+                die unless $table;
+                die unless $column;
+
+                say "[DEBUG]:     $target_header_file $target_data_file $serial";
+
+                my $sth = $dbh->prepare("SELECT COUNT(*) FROM $table WHERE serial=?");
+                $sth->execute($serial) or die $!;
+                my $count = $sth->fetchrow_arrayref->[0];
+                if ($count) {
+                    $sth = $dbh->prepare("UPDATE $table SET $column=? WHERE serial=?");
+                    $sth->execute( $row->{$key}, $serial ) or die $!;
+                }
+                else {
+                    if ( $table eq 'C01_SubjectList' ) {
+                        $sth = $dbh->prepare(
+                                qq/
+                                INSERT INTO `$table` (
+                                    `serial`,
+                                    `lab_id`,
+                                    `$column`,
+                                    `localid`,
+                                    `status`
+                                    ) VALUES ( ?, ?, ?, ?, ? )
+                                /
+                                );
+                        $sth->execute( 
+                                $serial,
+                                $lab_id,
+                                $row->{$key},
+                                $localid,
+                                $status
+                                ) or die $!;
+                    }
+                    else {
+                        $sth = $dbh->prepare(
+                                qq/
+                                INSERT INTO `$table` (
+                                    `serial`,
+                                    `lab_id`,
+                                    `status`,
+                                    `$column`
+                                    ) VALUES ( ?, ?, ?, ?)
+                                /
+                                );
+                        $sth->execute(
+                                $serial,
+                                $lab_id,
+                                $status,
+                                $row->{$key}
+                                ) or die $!;
+                    }
+                }
+            }
+        }
+        when (@type_b_pattern) {
+            say "[DEBUG]: $target_header_file $target_data_file";
+
+            given ($target_table) {
+                when (/^(C11_FU_outcomes|C13_ClinicalFollowUp)$/) {
+                    my $check_month=$row->{'month'};
+                    next if lc $check_month eq lc '9m';
+
+                    foreach my $key (@$header) {
+                        next if $key eq 'serial';
+                        next if $key eq 'month';
+                        die $key unless $meta->{$key};
+                        my $table  = ${ $meta->{$key} }[0];
+                        my $column = ${ $meta->{$key} }[1];
+                        die unless $table;
+                        die unless $column;
+#key : colum name
+#{ $meta->{$key} }[0] : table name
+#{ $meta->{$key} }[1] : table colum name
+                        say "[DEBUG]:     $target_header_file $target_data_file $serial";
+
+                        my $sth = $dbh->prepare("SELECT COUNT(*) FROM $table
+                                                 WHERE serial=? AND FU_VISIT=?");
+                        $sth->execute($serial, $check_month) or die $!;
+                        my $count = $sth->fetchrow_arrayref->[0];
+
+                        if($count) {
+                            $sth = $dbh->prepare("UPDATE $table
+                                                  SET $column=?
+                                                  WHERE serial=? AND FU_VISIT=?");
+                            $sth->execute( $row->{$key},
+                                           $serial,$check_month ) or die $!;
+                        } else {
+                            $sth = $dbh->prepare(
+                                    qq/
+                                    INSERT INTO `$table` (
+                                        `serial`,
+                                        `lab_id`,
+                                        `FU_VISIT`,
+                                        `$column`,
+                                        `status`
+                                        ) VALUES ( ?, ?, ?, ?, ? )
+                                    /
+                                    );
+                            $sth->execute( 
+                                    $serial,
+                                    $lab_id,
+                                    $check_month,
+                                    $row->{$key},
+                                    $status,
+                                    ) or die $!;
+                        }
+                    }
+                }
+                when (/^(C12_FU_AngiographicData|C14_AngiographicFunctionalTe)$/) {
+                    unless (defined($lookup_basename{$old_serial})) {
+                        $lookup_basename{$old_serial} = 1;
+                    }
+                    foreach my $key (@$header) {
+                        next if $key eq 'serial';
+                        die $key unless $meta->{$key};
+                        my $table  = ${ $meta->{$key} }[0];
+                        my $column = ${ $meta->{$key} }[1];
+                        die unless $table;
+                        die unless $column;
+#key : colum name
+#{ $meta->{$key} }[0] : table name
+#{ $meta->{$key} }[1] : table colum name
+                        say "[DEBUG]:     $target_header_file $target_data_file $serial";
+
+                        my $sth = $dbh->prepare("SELECT COUNT(*) FROM $table
+                                              WHERE serial=?
+                                              AND FUTESTNO=?");
+                        $sth->execute($serial, $lookup_basename{$old_serial}) or die $!;
+                        my $count = $sth->fetchrow_arrayref->[0];
+
+                        if ($count) {
+                            $sth = $dbh->prepare("UPDATE $table
+                                                  SET $column=?
+                                                  WHERE serial=?
+                                                  AND FUTESTNO=?");
+                            $sth->execute( $row->{$key},
+                                           $serial,
+                                           $lookup_basename{$old_serial} ) or die $!;
+                        }
+                        else {
+                            $sth = $dbh->prepare(
+                                    qq/
+                                    INSERT INTO `$table` (
+                                        `serial`,
+                                        `lab_id`,
+                                        `$column`,
+                                        `status`,
+                                        `FUTESTNO`
+                                        ) VALUES ( ?, ?, ?, ?, ? )
+                                    /
+                                    );
+                            $sth->execute( 
+                                    $serial,
+                                    $lab_id,
+                                    $row->{$key},
+                                    $status,
+                                    $lookup_basename{$old_serial},
+                                    ) or die $!;
+                        }
+                    }
+                    $lookup_basename{$old_serial}++;
+                }
+            }
+        }
+        default {
+            print "BUG : $target_table\n";
+            die;
+        }
+    }
+}
+close $fh;
+
+sub load_localid {
+    my ($serial_local_id_file) = @_;
+
+    my $csv = Text::CSV_XS->new( { binary => 1, eol => $/, always_quote => 1 } )
+        or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+
+    open $fh, "<:encoding(utf8)", "$serial_local_id_file"
+        or die "$serial_local_id_file:e $!";
+
+    my %serial_localid;
+    while ( my $row = $csv->getline($fh) ) {
+        unless ($row->[0] =~ $main_serial) {
+            unless ($row->[0] =~ $pat_serial) {
+                print "[$row->[0]]\n";
+                die unless ($row->[0] =~ $pat_localid);
+            }
+        }
+#        die unless $row->[1] =~ $pat_localid;
+        $serial_localid{ $row->[0] } = $row->[1];
+    }
+
+    close $fh;
+    return \%serial_localid;
+}
+
+sub load_master {
+    my ($master_lookup_file) = @_;
+    my $csv = Text::CSV_XS->new( { binary => 1, eol => $/, always_quote => 1 } )
+        or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+
+    open my $fh, "<:encoding(utf8)", "$master_lookup_file"
+        or die "$master_lookup_file:e $!";
+
+    my %master;
+    while ( my $row = $csv->getline($fh) ) {
+        die unless $row->[0] =~ $pat_localid;
+        die unless $row->[1] =~ $pat_serial;
+        $master{ $row->[0] } = $row->[1];
+    }
+
+    close $fh;
+    die unless scalar keys %master == 2113;
+    return \%master;
+}
+
+sub load_header {
+# %header = [ COLUMN_NAME->TABLE_NAME->COLUMN_INFO ]
+    my ($target_header_file) = @_;
+    my $csv = Text::CSV_XS->new( { binary => 1, eol => $/, always_quote => 1 } )
+        or die "Cannot use CSV: " . Text::CSV_XS->error_diag();
+
+    open $fh, "<:encoding(utf8)", "$target_header_file"
+        or die "$target_header_file:e $!";
+
+    my %header;
+    while ( my $row = $csv->getline($fh) ) {
+        $header{ $row->[0] } = [ $row->[1], $row->[2], $row->[3] ];
+    }
+    close $fh;
+    return \%header;
+}
+
+sub get_type {
+    my ( $path ) = @_;
+
+    my ( $filename, $dirname, $suffix ) = fileparse($path, qr/\..*$/);
+    return unless $suffix eq '.csv';
+
+    if ($filename =~ m/([B|A|C|E].*)/) {
+        $filename = $1;
+        return $filename;
+    }
+    else {
+        print "get_type : $filename\n";
+        return;
+    }
+}
