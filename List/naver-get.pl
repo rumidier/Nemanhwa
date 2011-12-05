@@ -46,19 +46,20 @@ my $dbh = DBI->connect(
     "root",
     "rumidier",
     {
-        RaiseErrorr => 1,
-        AutoCommit  => 1,
+        RaiseError => 1,
+        AutoCommit => 1,
     },
-);
-$dbh->do("set names utf8");
+) or die $!;
+
+$dbh->do("set names utf8")
+    or die $! . $dbh->errstr . "\n";
 
 #
 # 1. naver에 noblesse 의 시작 주소를 가져와
 # 전체 list 출력하기
 # 2. noblesse 의 처음과 끝을 출력하기
 for my $site_name ( @site_name ) {
-    naver ( $site_name )
-
+    naver( $site_name )
 };
 
 sub naver {
@@ -68,14 +69,47 @@ sub naver {
     for my $toon_name ( @name ) {
         my $sth = $dbh->prepare("SELECT `start-url` FROM access WHERE name=? and site=?");
 
-        $sth->execute( $toon_name, $site_name) or die $!;
+        $sth->execute( $toon_name, $site_name)
+            or die $! . $dbh->errstr . "\n";
         my $row = $sth->fetchrow_array;
 
         next unless defined($row);
 
         my $start_url = sprintf($row);
-        get_links($start_url);
-        print "$start_url\n";
+
+        my $word = $1 if $start_url =~ m/(\d+)$/g;
+        my @links = ();
+        my $response;
+        $response = $page_scrap->scrape( URI->new($start_url) );
+
+        my @pages = ();
+        next unless defined $word;
+
+        push @pages, $start_url;
+        for my $link ( @{ $response->{link} } ) {
+            next unless $link =~ /$word&page/;
+            push @pages, "$link";
+        }
+
+        my %cont;
+        for my $item (@pages) {
+            $cont{$item}++;
+        }
+
+        my @un_pages = sort keys %cont;
+        my @so_pages = sort {
+            my $page_no_a = 0;
+            $page_no_a = $1 if $a =~ m/page=(\d+)/;
+
+            my $page_no_b = 0;
+            $page_no_b = $1 if $b =~ m/page=(\d+)/;
+            
+            $page_no_a <=> $page_no_b;
+        } @un_pages;
+
+        print Dumper \@so_pages;
+        get_links($word, @so_pages);
+        sleep 5;
 #say $row;
 
 =pod
@@ -89,25 +123,43 @@ sub naver {
 };
 
 sub get_links {
-    my $url = shift;
-    my @words = ($url =~ /\d\d\d\d\d\d$/g);
+    my ( $word, @url_list ) = @_;
     my @links = ();
-    my $response;
-    $response = $page_scrap->scrape( URI->new($url) );
+    my $last_round;
+    my $first_round;
 
-    my @pages = ();
-    return 0 unless defined $words[0];
+    sleep 2;
+    for my $url (@url_list) {
+        my $response;
+        eval { $response = $page_scrap->scrape( URI->new($url) ); };
+        warn $@ if $@;
 
-    say "--|$url";
-    for my $link ( @{ $response->{link} } ) {
-        next unless $link =~ /316911&page/;
-        say "--- [$link] ---";
-        push @pages, $link and next unless defined $pages[0];
-#push @pages, $link if ($pages[0] =~ /$link/);
+        for my $link ( @{ $response->{link} } ) {
+      next unless $link =~ /$word&no=(\d+)&weekday/;
+
+            $first_round = $link unless defined($last_round);
+            $last_round  = $link unless defined($last_round);
+
+            given ($link) {
+                when (@links) {
+                }
+                default {
+                    push @links, "$link";
+                    $last_round  = $link if $last_round le $link;
+                    $first_round = $link if $first_round ge $link;
+                }
+            }
+        }
+
+        sleep 3;
     }
-    say "--- [@pages] ---";
+    print Dumper \@links;
 
-    sleep 5;
+#push @links, "$last_round";
+#push @links, "$first_round";
+    return \@links;
+
+
 };
 
 =pod
