@@ -50,11 +50,11 @@ while (1) {
 
     $first_round = pop(@{ $links });
     $last_round = pop(@{ $links });
-    print Dumper \$links;
  
 #download($links);
     sleep 5;
     $page_count++;
+    last if ($page_count ge '1');
 }
  
 sub get_image_links {
@@ -70,7 +70,7 @@ sub get_image_links {
     for my $link ( @{ $response->{link} } ) {
         next unless $link =~ /31337&bsno/;
 
-        $first_round = $link unless defined($last_round);
+        $first_round = $link unless defined($first_round);
         $last_round = $link unless defined($last_round);
 
         given ($link) {
@@ -86,7 +86,6 @@ sub get_image_links {
  
     push @links, "$last_round";
     push @links, "$first_round";
-    print Dumper \@links;
     return \@links;
 }
 

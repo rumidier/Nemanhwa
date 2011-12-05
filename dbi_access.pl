@@ -15,7 +15,7 @@ my %site = (
         "noblesse" =>
           'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=1',
         "tal" =>
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=1',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=316911',
         "doctor" =>
           'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=1',
     },
@@ -71,9 +71,8 @@ for my $site_name ( keys %site ) {
 
         if ($count) {
             $sth =
-              $dbh->prepare("UPDATE access SET site=?, start=? WHERE name=?");
-            $sth->execute( $site_name, $site{$site_name}{$toon_name},
-                $toon_name );
+              $dbh->prepare("UPDATE access SET site=?, `start-url`=? WHERE name=?");
+            $sth->execute( $site_name, $site{$site_name}{$toon_name}, $toon_name );
         }
         else {
             $sth = $dbh->prepare(
@@ -81,7 +80,7 @@ for my $site_name ( keys %site ) {
                 INSERT INTO `access` (
                     `name`,
                     `site`,
-                    `start`
+                    `start-url`
                     ) VALUES (?, ?, ?)
                 /
             );
