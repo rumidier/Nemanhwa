@@ -13,11 +13,11 @@ use File::Basename;
 my %site = (
     naver => {
         "noblesse" =>
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=1',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
         "tal" =>
           'http://comic.naver.com/webtoon/list.nhn?titleId=316911',
         "doctor" =>
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=1',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=293523',
     },
     daum => {
         "thelast" => 'http://cartoon.media.daum.net/webtoon/view/thelast#1',
@@ -27,9 +27,9 @@ my %site = (
     },
     nate => {
         "kudu" =>
-          'http://comics.nate.com/webtoon/detail.php?btno=31337&category=1',
+          'http://comics.nate.com/webtoon/detail.php?btno=31337',
         "ant" =>
-          'http://comics.nate.com/webtoon/detail.php?btno=31852&category=1',
+          'http://comics.nate.com/webtoon/detail.php?btno=31852',
     },
     stoo => {
         "king" =>
