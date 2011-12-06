@@ -63,7 +63,6 @@ sub get_image_links {
     my $response;
     eval { $response = $page_scrap->scrape( URI->new($url) ); };
     warn $@ if $@;
- 
 
     my $last_round;
     my $first_round;

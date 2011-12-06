@@ -1,108 +1,3 @@
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=6] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=7] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=6'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=8] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=6',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=7'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=9] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=6',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=7',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=8'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=10] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=6',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=7',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=8',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=9'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=6',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=7',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=8',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=9',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=10'
-        ];
---------------------------------------------------------------------------
 $VAR1 = [
           'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
           'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
@@ -116,88 +11,127 @@ $VAR1 = [
           'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=10',
           'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2'
         ];
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=2] --||
---------------------------------------------------------------------------
 $VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911'
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=2',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=3',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=4',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=5',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=6',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=7',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=8',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=9',
+          'http://comic.naver.com/webtoon/list.nhn?titleId=25455&page=10'
         ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=3] --||
---------------------------------------------------------------------------
+debug ---: 1
+debug ---: 1
+debug ---: 1
+debug ---: 1
+debug ---: 1
+debug ---: 1
+debug ---: 1
+debug ---: 1
+debug ---: 1
+debug ---: 1
 $VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=2'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=4] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=3'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=2] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=4'
-        ];
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=316911&page=2'
-        ];
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=3] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=4] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=3'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=5] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=4'
-        ];
---------------------------------------------------------------------------
-link ||-- [http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2] --||
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=5'
-        ];
---------------------------------------------------------------------------
-$VAR1 = [
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=3',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=4',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=5',
-          'http://comic.naver.com/webtoon/list.nhn?titleId=293523&page=2'
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=212&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=211&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=210&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=209&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=208&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=207&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=206&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=205&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=204&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=203&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=202&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=201&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=200&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=199&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=198&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=197&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=196&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=195&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=194&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=193&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=192&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=191&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=190&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=189&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=188&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=187&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=186&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=185&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=184&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=183&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=182&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=181&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=180&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=179&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=178&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=177&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=176&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=175&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=174&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=173&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=172&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=171&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=170&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=169&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=168&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=167&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=166&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=165&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=164&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=163&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=162&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=161&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=160&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=159&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=158&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=157&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=156&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=155&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=154&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=153&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=152&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=151&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=150&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=149&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=148&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=147&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=146&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=145&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=144&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=143&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=142&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=141&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=140&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=139&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=138&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=137&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=136&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=135&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=134&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=133&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=132&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=131&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=130&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=129&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=128&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=127&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=126&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=125&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=124&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=123&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=122&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=121&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=120&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=119&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=118&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=117&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=116&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=115&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=114&weekday=tue',
+          'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=113&weekday=tue'
         ];

@@ -28,11 +28,16 @@ my $bbs_scrap = scraper {
 
 my $page_count = 1;
 
+=pod
 my @name = qw(
   noblesse tal doctor
   thelast dieter taoistland
   kudu ant
   king
+);
+=cut
+my @name = qw(
+  noblesse
 );
 
 my @site_name = qw(
@@ -87,9 +92,10 @@ sub naver {
 
         push @pages, $start_url;
         for my $link ( @{ $response->{link} } ) {
-            next unless $link =~ /$word&page/;
+            next unless $link =~ /$word&page=1/;
             push @pages, "$link";
         }
+        print Dumper \@pages;
 
         my %cont;
         for my $item (@pages) {
@@ -110,7 +116,6 @@ sub naver {
         print Dumper \@so_pages;
         get_links($word, @so_pages);
         sleep 5;
-#say $row;
 
 =pod
             my $sth = $dbh->prepare("SELECT name FROM access WHERE site=?");
@@ -121,6 +126,7 @@ sub naver {
     }
     sleep 5;
 };
+
 
 sub get_links {
     my ( $word, @url_list ) = @_;
@@ -135,7 +141,7 @@ sub get_links {
         warn $@ if $@;
 
         for my $link ( @{ $response->{link} } ) {
-      next unless $link =~ /$word&no=(\d+)&weekday/;
+            next unless $link =~ /$word&no=(\d+)&weekday/;
 
             $first_round = $link unless defined($last_round);
             $last_round  = $link unless defined($last_round);
@@ -149,17 +155,18 @@ sub get_links {
                     $first_round = $link if $first_round ge $link;
                 }
             }
+
         }
 
         sleep 3;
+#    'http://comic.naver.com/webtoon/detail.nhn?titleId=25455&no=1&weekday=tue';
+        say "debug ---: $url";
     }
-    print Dumper \@links;
+        print Dumper \@links;
 
 #push @links, "$last_round";
 #push @links, "$first_round";
     return \@links;
-
-
 };
 
 =pod
@@ -205,7 +212,6 @@ while (1) {
     $page_count++;
     last if ($page_count ge '1');
 }
-=cut
 
 sub get_image_links {
     my $url   = shift;
@@ -237,3 +243,4 @@ sub get_image_links {
     push @links, "$first_round";
     return \@links;
 }
+=cut
