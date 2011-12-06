@@ -33,7 +33,7 @@ ALTER TABLE webtoon TYPE = InnoDB;
 -- 
 DROP TABLE IF EXISTS round;
 CREATE TABLE round (
-  webtoon_id INTEGER      NOT NULL
+  webtoon_id INTEGER      NOT NULL,
   id         INTEGER      AUTO_INCREMENT NOT NULL,
   chapter    MEDIUMTEXT   NOT NULL,
   chapter_id MEDIUMTEXT   NOT NULL,
