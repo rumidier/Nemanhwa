@@ -13,6 +13,23 @@ use File::Basename;
 ###
 # start_line table 입력정보
 ###
+
+my %site = (
+    naver => {
+        start_url   => 'http://comic.naver.com/webtoon/list.nhn?titleId=%s',
+        webtoon_url => 'http://comic.naver.com/webtoon/detail.nhn?titleId=%s&no=%s',
+    },
+    daum => {
+        start_url   => 'http://cartoon.media.daum.net/webtoon/view/%s',
+        webtoon_url => 'http://cartoon.media.daum.net/webtoon/viewer/%s',
+    },
+    nate => {
+        start_url   => 'http://comics.nate.com/webtoon/detail.php?btno=%s',
+        webtoon_url => 'http://comics.nate.com/webtoon/detail.php?btno=%s&bsno=%s',
+    },
+);
+
+=pod
 my %site = (
     naver => {
         name => {
@@ -45,7 +62,6 @@ my %site = (
     },
 );
 
-=pod
     stoo => {
     'http://stoo.asiae.co.kr/cartoon/ctlist.htm?sc1=cartoon&sc2=ing&sc3=%s',
     'http://stoo.asiae.co.kr/cartoon/ctlist.htm?sc1=cartoon&sc2=ing&sc3=57&id=2011120510164573405A
@@ -87,57 +103,57 @@ for my $site_name ( keys %site ) {
 
         if ( $url_list eq 'name' ) {
             for my $toon_name ( keys $site{$site_name}{$url_list} ) {
-                say "        toon_name : $toon_name"; 
+                say "        toon_name : $toon_name";
                 say "              image : $site{$site_name}{$url_list}{$toon_name}";
 
-                my $sth = $dbh->prepare("SELECT COUNT(*) FROM access WHERE name=?");
+                my $sth =
+                  $dbh->prepare("SELECT COUNT(*) FROM access WHERE name=?");
                 $sth->execute($toon_name) or die $!;
                 my $count = $sth->fetchrow_arrayref->[0];
 
                 if ($count) {
                     $sth = $dbh->prepare(
-                            "UPDATE access SET site=?, `image`=? WHERE name=?");
-                    $sth->execute( $site_name, $site{$site_name}{$url_list}{$toon_name}, $toon_name );
+                        "UPDATE access SET site=?, `image`=? WHERE name=?");
+                    $sth->execute( $site_name,
+                        $site{$site_name}{$url_list}{$toon_name}, $toon_name );
                 }
                 else {
                     $sth = $dbh->prepare(
-                            qq/
+                        qq/
                             INSERT INTO `access` (
                                 `name`,
                                 `site`,
                                 `image`
                                 ) VALUES (?, ?, ?)
                             /
-                            );
-                    $sth->execute( $toon_name, $site_name, $site{$site_name}{$url_list}{$toon_name} )
-                        or die $!;
+                    );
+                    $sth->execute( $toon_name, $site_name,
+                        $site{$site_name}{$url_list}{$toon_name} )
+                      or die $!;
                 }
             }
         }
-        elsif ($url_list eq 'url') {
-            #start_line table insert
-                my $sth = $dbh->prepare("SELECT COUNT(*) FROM start_line WHERE site=?");
-                $sth->execute($site_name) or die $!;
-                my $count = $sth->fetchrow_arrayref->[0];
+        elsif ( $url_list eq 'url' ) {
 
-                if ($count) {
-                    $sth = $dbh->prepare("UPDATE start_line SET `start_url`=?, `webtoon_url`=?  WHERE site=?");
-                    $sth->execute(
-                            $site{$site_name}{$url_list}{'start_url'},
-                            $site{$site_name}{$url_list}{'webtoon_url'},
-                            $site_name
-                            );
-                }
-                else {
-                    $sth = $dbh->prepare( qq/ INSERT INTO `start_line` ( `site`, `start_url`, `webtoon_url`) VALUES (?, ?, ?) /
-                            );
-                    $sth->execute(
-                            $site_name,
-                            $site{$site_name}{$url_list}{'start_url'},
-                            $site{$site_name}{$url_list}{'webtoon_url'}
-                            )
-                        or die $!;
-                }
+            #start_line table insert
+            my $sth =
+              $dbh->prepare("SELECT COUNT(*) FROM start_line WHERE site=?");
+            $sth->execute($site_name) or die $!;
+            my $count = $sth->fetchrow_arrayref->[0];
+
+            if ($count) {
+                $sth = $dbh->prepare( "UPDATE start_line SET `start_url`=?, `webtoon_url`=?  WHERE site=?" );
+                $sth->execute( $site{$site_name}{$url_list}{'start_url'},
+                    $site{$site_name}{$url_list}{'webtoon_url'}, $site_name );
+            }
+            else {
+                $sth = $dbh->prepare( qq/ INSERT INTO `start_line` ( `site`, `start_url`, `webtoon_url`) VALUES (?, ?, ?) / );
+                $sth->execute(
+                    $site_name,
+                    $site{$site_name}{$url_list}{'start_url'},
+                    $site{$site_name}{$url_list}{'webtoon_url'}
+                ) or die $!;
+            }
         }
         else {
             die $!;
