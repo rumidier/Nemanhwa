@@ -69,27 +69,6 @@ my $dbh = DBI->connect(
 );
 $dbh->do("set names utf8");
 
-for my $site_name ( keys %webtoon ) {
-    say "site_name : $site_name";
-    my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE name=?");
-    $sth->execute($site_name) or die $!;
-
-    my $count = $sth->fetchrow_arrayref->[0];
-    next unless $count;
-
-    my @ids = @{ $dbh->selectall_arrayref("SELECT id FROM site WHERE name = '$site_name'", { Slice => {} }) };
-    my $site_id = $ids[0]->{'id'};
-    say "site_id     : $site_id";
-    
-    for my $webtoon_name ( keys $webtoon{$site_name} ) {
-        say "    webtoon_name : $webtoon_name";
-        for my $co_im ( keys $webtoon{$site_name}{$webtoon_name} ) {
-            say "        co_im : $co_im";
-        }
-    }
-}
-
-=pod
 for my $site_name ( keys %site ) {
     for my $url_list ( keys $site{$site_name} ) {
         my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE name=?");
@@ -114,4 +93,49 @@ for my $site_name ( keys %site ) {
         }
     }
 }
-=cut
+
+for my $site_name ( keys %webtoon ) {
+    my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE name=?");
+    $sth->execute($site_name) or die $!;
+
+    my $count = $sth->fetchrow_arrayref->[0];
+    next unless $count;
+
+    my @ids = @{ $dbh->selectall_arrayref("SELECT id FROM site WHERE name = '$site_name'", { Slice => {} }) };
+    my $site_id = $ids[0]->{'id'};
+####
+# site_id 가져 왔으니까 포탈별로 site_id 넣고
+# site_name 키로 %webtoon에서 web_name키로 찾아서 name 넣고
+# name 키로 code랑 image값 너면 오케이
+####
+    for my $webtoon_name ( keys $webtoon{$site_name} ) {
+        my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE id=? and name=?");
+        $sth->execute($site_id, $site_name) or die $!;
+
+        my $count = $sth->fetchrow_arrayref->[0];
+        next unless $count; #site에 등록 정보가 없으면 스킵
+
+        $sth = $dbh->prepare("SELECT COUNT(*) FROM webtoon WHERE site_id=? and name=?");
+        $sth->execute($site_id, $webtoon_name) or die $!;
+
+        $count = $sth->fetchrow_arrayref->[0];
+        unless ($count) {
+            $sth = $dbh->prepare(
+                    qq/
+                    INSERT INTO `webtoon` (
+                        `site_id`,
+                        `name`
+                        ) VALUES (?, ?)
+
+                    /
+                    );
+            $sth->execute( $site_id, $webtoon_name )
+                or die $!;
+        }
+
+        for my $code_image ( keys $webtoon{$site_name}{$webtoon_name} ) {
+            $sth = $dbh->prepare("UPDATE webtoon SET $code_image=? WHERE name=?");
+            $sth->execute( $webtoon{$site_name}{$webtoon_name}{$code_image}, $webtoon_name );
+        }
+    }
+}
