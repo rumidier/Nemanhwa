@@ -20,7 +20,7 @@ my %site = (
         webtoon_url => 'http://comic.naver.com/webtoon/detail.nhn?titleId=%s&no=%s',
     },
     daum => {
-        start_url   => 'http://cartoon.media.daum.net/webtoon/view/%s',
+        start_url   => 'http://cartoon.media.daum.net/webtoon/viewer/%s',
         webtoon_url => 'http://cartoon.media.daum.net/webtoon/viewer/%s',
     },
     nate => {
@@ -42,11 +42,11 @@ my %webtoon = (
     },
     daum => {
         last => {
-            code  => 'thelast',
+            code  => '10479',
             image => 'http://i1.cartoon.daumcdn.net/svc/image/U03/cartoon/U949E34C4D6B2B9E2D',
         },
         dieter => {
-            code  => 'dieter',
+            code  => '10362',
             image => 'http://i1.cartoon.daumcdn.net/svc/image/U03/cartoon/U620854C4D5B251707',
         },
       },

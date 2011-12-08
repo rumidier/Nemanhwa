@@ -35,7 +35,7 @@ DROP TABLE IF EXISTS round;
 CREATE TABLE round (
   webtoon_id INTEGER      NOT NULL,
   id         INTEGER      AUTO_INCREMENT NOT NULL,
-  chapter    MEDIUMTEXT   NOT NULL,
+  chapter    INTEGER      NOT NULL,
   chapter_id MEDIUMTEXT   NOT NULL,
 
   PRIMARY KEY (id),

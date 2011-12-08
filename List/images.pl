@@ -1,6 +1,8 @@
 #!/usr/bin/env perl 
 
 use 5.014;
+use utf8;
+use Encode;
 use strict;
 use warnings;
 use URI;
@@ -22,7 +24,12 @@ $last_page_num  ||= 1;
  
 # page scraper
 my $page_scrap = scraper {
-    process "a", 'link[]' => '@href';
+    process 'div.episode_list > div.inner_wrap > div.scroll_wrap > ul > li', 'items[]' => scraper {
+        process 'a.img', link => '@href';
+        process 'a.img', title => '@title';
+    };
+#    process "a", 'link[]' => '@href';
+#    process "a", 'link[]' => '@href';
 };
  
 # bbs scraper
@@ -41,7 +48,8 @@ while (1) {
     );
 =cut
     my $g_name = sprintf(
-            'http://comics.nate.com/webtoon/detail.php?btno=31337&category'
+#'http://cartoon.media.daum.net/webtoon/viewer/10362'
+'http://cartoon.media.daum.net/webtoon/viewer/10479'
     );
     my $links = get_image_links($g_name);
 
@@ -66,9 +74,14 @@ sub get_image_links {
 
     my $last_round;
     my $first_round;
-    for my $link ( @{ $response->{link} } ) {
-        next unless $link =~ /31337&bsno/;
+    for my $item ( @{ $response->{items} } ) {
+        my $str = encode("utf8", $item->{link});
+        say "DEBUG: [$str]";
 
+#        next unless $link =~ /viewer\/(\d+)$/;
+
+#                push @links, "$link";
+=pod
         $first_round = $link unless defined($first_round);
         $last_round = $link unless defined($last_round);
 
@@ -76,15 +89,26 @@ sub get_image_links {
             when (@links){
             }
             default {
-                push @links, "$link";
                 $last_round = $link if $last_round le $link;  
                 $first_round = $link if $first_round ge $link;  
             }
         }
+=cut
     }
  
-    push @links, "$last_round";
-    push @links, "$first_round";
+#   push @links, "$last_round";
+#    push @links, "$first_round";
+my @so_pages = sort { 
+            my $page_no_a = 0; 
+            $page_no_a = $1 if $a =~ m/viewer\/(\d+)$/;
+
+            my $page_no_b = 0; 
+            $page_no_b = $1 if $b =~ m/viewer\/(\d+)$/;
+
+            $page_no_a <=> $page_no_b; 
+        } @links; 
+
+    say Dumper \@so_pages;
     return \@links;
 }
 
