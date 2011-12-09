@@ -103,11 +103,7 @@ for my $site_name ( keys %webtoon ) {
 
     my @ids = @{ $dbh->selectall_arrayref("SELECT id FROM site WHERE name = '$site_name'", { Slice => {} }) };
     my $site_id = $ids[0]->{'id'};
-####
-# site_id 가져 왔으니까 포탈별로 site_id 넣고
-# site_name 키로 %webtoon에서 web_name키로 찾아서 name 넣고
-# name 키로 code랑 image값 너면 오케이
-####
+
     for my $webtoon_name ( keys $webtoon{$site_name} ) {
         my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE id=? and name=?");
         $sth->execute($site_id, $site_name) or die $!;
