@@ -4,6 +4,7 @@ use utf8;
 use 5.014;
 use strict;
 use warnings;
+use Data::Dumper;
 use YAML::Tiny;
 
 my %site = (
@@ -20,6 +21,7 @@ my %site = (
         webtoon_url => 'http://comics.nate.com/webtoon/detail.php?btno=%s&bsno=%s',
     },
 );
+print Dumper \%site;
 
 my %webtoon = (
     naver => {

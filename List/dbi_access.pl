@@ -9,59 +9,25 @@ use Text::CSV::Encoded;
 use Text::CSV_XS;
 use Data::Dumper;
 use File::Basename;
+use YAML::Tiny;
 
 ###
 # start_line table 입력정보
 ###
 
-my %site = (
-    naver => {
-        start_url   => 'http://comic.naver.com/webtoon/list.nhn?titleId=%s',
-        webtoon_url => 'http://comic.naver.com/webtoon/detail.nhn?titleId=%s&no=%s',
-    },
-    daum => {
-        start_url   => 'http://cartoon.media.daum.net/webtoon/viewer/%s',
-        webtoon_url => 'http://cartoon.media.daum.net/webtoon/viewer/%s',
-    },
-    nate => {
-        start_url   => 'http://comics.nate.com/webtoon/detail.php?btno=%s',
-        webtoon_url => 'http://comics.nate.com/webtoon/detail.php?btno=%s&bsno=%s',
-    },
-);
-
-my %webtoon = (
-    naver => {
-        noblesse => {
-            code  => '25455',
-            image => 'http://imgcomic.naver.com/webtoon/25455/thumbnail/title_thumbnail_20100614120245_t125x101.jpg',
-        },
-        tal      => {
-            code  => '316911',
-            image => 'http://imgcomic.naver.com/webtoon/316911/thumbnail/title_thumbnail_20110331153319_t125x101.jpg',
-        }
-    },
-    daum => {
-        last => {
-            code  => '10479',
-            image => 'http://i1.cartoon.daumcdn.net/svc/image/U03/cartoon/U949E34C4D6B2B9E2D',
-        },
-        dieter => {
-            code  => '10362',
-            image => 'http://i1.cartoon.daumcdn.net/svc/image/U03/cartoon/U620854C4D5B251707',
-        },
-      },
-    nate => {
-        kudu => {
-            code  => '31337',
-            image => 'http://crayondata.cyworld.com/upload/series/31337_m.gif',
-        },
-      },
-);
+# 아..아름 답지 않아...
+my $yaml      = YAML::Tiny->read( 'dbi.yml' );
+my $database  = $yaml->[0]->{'db_config'}{'database'};
+my $host      = $yaml->[0]->{'db_config'}{'host'};
+my $db_user   = $yaml->[0]->{'db_config'}{'db_user'};
+my $db_passwd = $yaml->[0]->{'db_config'}{'db_passwd'};
+my $webtoon   = $yaml->[0]->{'webtoon'};
+my $site      = $yaml->[0]->{'site'};
 
 my $dbh = DBI->connect(
-    "DBI:mysql:database=webtoon;host=localhost",
-    "root",
-    "rumidier",
+    "DBI:mysql:database=$database;host=$host",
+    "$db_user",
+    "$db_passwd",
     {
         RaiseError => 1,
         AutoCommit => 1,
@@ -69,15 +35,17 @@ my $dbh = DBI->connect(
 );
 $dbh->do("set names utf8");
 
-for my $site_name ( keys %site ) {
-    for my $url_list ( keys $site{$site_name} ) {
+
+for my $site_name ( keys $site ) {
+    for my $url_list ( keys $site->{$site_name} ) {
         my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE name=?");
         $sth->execute($site_name) or die $!;
 
         my $count = $sth->fetchrow_arrayref->[0];
         if ($count) {
             $sth = $dbh->prepare("UPDATE site SET $url_list=? WHERE name=?");
-            $sth->execute( $site{$site_name}{$url_list}, $site_name );
+            $sth->execute( $site->{$site_name}{$url_list}, $site_name )
+                or die $!;
         }
         else {
             $sth = $dbh->prepare(
@@ -88,23 +56,24 @@ for my $site_name ( keys %site ) {
                         ) VALUES (?, ?)
                     /
             );
-            $sth->execute( $site_name, $site{$site_name}{$url_list} )
+            $sth->execute( $site_name, $site->{$site_name}{$url_list} )
               or die $!;
         }
     }
 }
 
-for my $site_name ( keys %webtoon ) {
+for my $site_name ( keys $webtoon ) {
     my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE name=?");
     $sth->execute($site_name) or die $!;
 
     my $count = $sth->fetchrow_arrayref->[0];
-    next unless $count;
+    say "$site_name is not match" next unless $count;
 
     my @ids = @{ $dbh->selectall_arrayref("SELECT id FROM site WHERE name = '$site_name'", { Slice => {} }) };
     my $site_id = $ids[0]->{'id'};
+    say "$site_id is not match" next unless $site_id;
 
-    for my $webtoon_name ( keys $webtoon{$site_name} ) {
+    for my $webtoon_name ( keys $webtoon->{$site_name} ) {
         my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE id=? and name=?");
         $sth->execute($site_id, $site_name) or die $!;
 
@@ -129,9 +98,9 @@ for my $site_name ( keys %webtoon ) {
                 or die $!;
         }
 
-        for my $code_image ( keys $webtoon{$site_name}{$webtoon_name} ) {
+        for my $code_image ( keys $webtoon->{$site_name}{$webtoon_name} ) {
             $sth = $dbh->prepare("UPDATE webtoon SET $code_image=? WHERE name=?");
-            $sth->execute( $webtoon{$site_name}{$webtoon_name}{$code_image}, $webtoon_name );
+            $sth->execute( $webtoon->{$site_name}{$webtoon_name}{$code_image}, $webtoon_name );
         }
     }
 }

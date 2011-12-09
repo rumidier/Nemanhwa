@@ -121,6 +121,22 @@ sub insert_round_table {
     }
 }
 
+sub sort_pages {
+    my @un_sort_pages = @_;
+
+    my @so_pages = sort {
+        my $page_no_a = 0;
+        $page_no_a = $1 if $a =~ m/^(\d+)$/;
+
+        my $page_no_b = 0;
+        $page_no_b = $1 if $b =~ m/^(\d+)$/;
+
+        $page_no_a <=> $page_no_b;
+    } @un_sort_pages;
+
+    return \@so_pages;
+}
+
 sub naver {
     my $site_name = shift;
     return 0 unless $site_name eq 'naver';
@@ -254,16 +270,8 @@ sub nate {
         for (@pages) {
             push @un_pages, ( $_ =~ m/bsno=(\d+)$/ );
         }
+        my @so_pages = sort_pages (@un_pages);
 
-        my @so_pages = sort {
-            my $page_no_a = 0;
-            $page_no_a = $1 if $a =~ m/^(\d+)$/;
-
-            my $page_no_b = 0;
-            $page_no_b = $1 if $b =~ m/^(\d+)$/;
-
-            $page_no_a <=> $page_no_b;
-        } @un_pages;
         my ($high_round) = ( $so_pages[$#so_pages] =~ m/^(\d+)$/ );
 
         my @webtoon_table_id = get_webtoon_id( $webtoon_count->{'name'} );
@@ -279,3 +287,4 @@ sub nate {
         sleep 5;
     }
 }
+
