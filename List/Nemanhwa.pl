@@ -10,13 +10,14 @@ use LWP::UserAgent;
 use Web::Scraper;
 use Data::Dumper;
 
+###
+# browser 설정에 대한 이해가 필요
+###
 my $browser =
   LWP::UserAgent->new( agent => 'Mozilla/5.0'
       . ' (Windows; U; Windows NT 6.1; en-US; rv:1.9.2b1)'
       . ' Gecko/20091014 Firefox/3.6b1 GTB5' );
-my $file_num = 0;
 
-# page scraper
 my $page_scrap = scraper {
     process 'div.episode_list > div.inner_wrap > div.scroll_wrap > ul > li',
       'items[]' => scraper {
@@ -32,8 +33,6 @@ my $page_scrap = scraper {
         process 'img', title => '@alt';
       };    #nate
 };
-
-my $page_count = 1;
 
 my @select_site = qw(
   naver
@@ -58,15 +57,14 @@ $dbh->do("set names utf8")
 # 1. naver에 noblesse 의 시작 주소를 가져와
 # 전체 list 출력하기
 # 2. noblesse 의 처음과 끝을 출력하기
+
 for my $site_name (@select_site) {
     given ($site_name) {
         when ('naver') {
-
-            #    naver( $site_name );
+            naver($site_name);
         }
         when ('daum') {
-
-            #            daum( $site_name );
+            daum($site_name);
         }
         when ('nate') {
             nate($site_name);
@@ -80,17 +78,18 @@ for my $site_name (@select_site) {
 sub get_site_table {
     my $site_name = shift;
     my $sth       = $dbh->prepare(
-        "SELECT `id`, `start_url`, `webtoon_url` FROM
-            site WHERE name=?"
+        "SELECT `id`, `start_url`, `webtoon_url` FROM site WHERE name=?"
     );
     $sth->execute($site_name)
       or die $! . $dbh->errstr . "\n";
+
     return $sth->fetchrow_array;
 }
 
 sub get_webtoon_table {
     my $site_id = shift;
     my $sql     = "SELECT `name`, `code` FROM webtoon WHERE site_id=$site_id";
+
     return @{ $dbh->selectall_arrayref( $sql, { Slice => {} } ) };
 }
 
@@ -107,16 +106,16 @@ sub insert_round_table {
     my $chapter = 1;
     for my $chapter_id (@chapter_id_full) {
         my $sth = $dbh->prepare(
-                qq/
+            qq/
                 INSERT INTO `round` (
                     `webtoon_id`,
                     `chapter`,
                     `chapter_id`
                     ) VALUES (?, ?, ?)
                 /
-                );
+        );
         $sth->execute( $webtoon_id, $chapter, $chapter_id )
-            or die $!;
+          or die $!;
 
         $chapter++;
     }
@@ -139,24 +138,47 @@ sub naver {
         for my $link ( @{ $response->{items} } ) {
             push @pages, "$link->{link}";
         }
+
+        my @un_pages;
+        for (@pages) {
+            push @un_pages, ( $_ =~ m/no=(\d+)/ );
+        }
+
         my @so_pages = sort {
             my $page_no_a = 0;
-            $page_no_a = $1 if $a =~ m/page=(\d+)/;
+            $page_no_a = $1 if $a =~ m/^(\d+)$/;
 
             my $page_no_b = 0;
-            $page_no_b = $1 if $b =~ m/page=(\d+)/;
+            $page_no_b = $1 if $b =~ m/^(\d+)$/;
 
             $page_no_a <=> $page_no_b;
-        } @pages;
+        } @un_pages;
 
-        my ($high_round) = ( $so_pages[$#so_pages] =~ m/no=(\d+)&/ );
-        say "Error" unless $high_round;
-        print "----: high : [$high_round]\n";
+        my ($high_round) = ( $so_pages[$#so_pages] =~ m/^(\d+)$/ );
+        say "Error parsing" unless $high_round;
 
-        for my $test ( 1 .. $high_round ) {
-            my $print =
-              sprintf( $webtoon_url, $webtoon_count->{'code'}, $test );
+        my @full_pages;
+        for my $page_count ( 1 .. $high_round ) {
+            push @full_pages, $page_count;
         }
+
+        my ($webtoon_table_id) = get_webtoon_id( $webtoon_count->{'name'} );
+
+        my $sth = $dbh->prepare("SELECT COUNT(*) FROM round WHERE webtoon_id=?");
+        $sth->execute( $webtoon_table_id->{'id'} )
+          or die $!;
+
+        my $count = $sth->fetchrow_arrayref->[0];
+        unless ($count) {
+            insert_round_table( $webtoon_table_id->{'id'}, @full_pages );
+        }
+=pod
+풀 url 만드는곳
+        for my $test ( 1 .. $high_round ) {
+            my $print = sprintf( $webtoon_url, $webtoon_count->{'code'}, $test );
+            say "$test : $print";
+        }
+=cut
     }
 }
 
@@ -174,25 +196,38 @@ sub daum {
         $response = $page_scrap->scrape( URI->new($s_url) );
 
         my @pages = ();
-
         for my $link ( @{ $response->{items} } ) {
             push @pages, "$link->{link}";
         }
+
+        my @un_pages;
+        for (@pages) {
+            push @un_pages, ( $_ =~ m/viewer\/(\d+)$/ );
+        }
+
         my @so_pages = sort {
             my $page_no_a = 0;
-            $page_no_a = $1 if $a =~ m/viewer\/(\d+)$/;
+            $page_no_a = $1 if $a =~ m/^(\d+)$/;
 
             my $page_no_b = 0;
-            $page_no_b = $1 if $b =~ m/viewer\/(\d+)$/;
+            $page_no_b = $1 if $b =~ m/^(\d+)$/;
 
             $page_no_a <=> $page_no_b;
-        } @pages;
+        } @un_pages;
 
-        my ($high_round) = ( $so_pages[$#so_pages] =~ m/viewer\/(\d+)$/ );
+        my ($high_round) = ( $so_pages[$#so_pages] =~ m/^(\d+)$/ );
         say "Error" unless defined $high_round;
-        print "----: high : [$high_round]\n";
 
-        #    print Dumper \@pages;
+        my @webtoon_table_id = get_webtoon_id( $webtoon_count->{'name'} );
+
+        my $sth = $dbh->prepare("SELECT COUNT(*) FROM round WHERE webtoon_id=?");
+        $sth->execute( $webtoon_table_id[0]->{'id'} )
+          or die $!;
+
+        my $count = $sth->fetchrow_arrayref->[0];
+        unless ($count) {
+            insert_round_table( $webtoon_table_id[0]->{'id'}, @so_pages );
+        }
 
         sleep 5;
     }
@@ -219,7 +254,7 @@ sub nate {
         for (@pages) {
             push @un_pages, ( $_ =~ m/bsno=(\d+)$/ );
         }
-        print Dumper \@un_pages;
+
         my @so_pages = sort {
             my $page_no_a = 0;
             $page_no_a = $1 if $a =~ m/^(\d+)$/;
@@ -232,21 +267,14 @@ sub nate {
         my ($high_round) = ( $so_pages[$#so_pages] =~ m/^(\d+)$/ );
 
         my @webtoon_table_id = get_webtoon_id( $webtoon_count->{'name'} );
-        say "webtoon_id     :   $webtoon_table_id[0]->{'id'}\n";
-        my @round_table = get_webtoon_id( $webtoon_table_id[0]->{'id'} );
+        my $sth = $dbh->prepare("SELECT COUNT(*) FROM round WHERE webtoon_id=?");
+        $sth->execute( $webtoon_table_id[0]->{'id'} )
+          or die $!;
 
-=pod
-        unless (@round_table) {
+        my $count = $sth->fetchrow_arrayref->[0];
+        unless ($count) {
             insert_round_table( $webtoon_table_id[0]->{'id'}, @so_pages );
         }
-
-        unless (defined ($webtoon_table_id[0]) ) {
-            say "asdfasd";
-        }
-        say "Error" and die $! unless ($high_round);
-        
-        print "----: high : [$high_round]\n";
-=cut
 
         sleep 5;
     }
