@@ -1,18 +1,10 @@
-
-body {
-margin: 0;
-margin-bottom: 25px;
-padding: 0;
-background-color: #ddd;
-background-image: url("/images/perldancer-bg.jpg");
-background-repeat: no-repeat;
-background-position: top left;
-
-font-family: "Lucida Grande", "Bitstream Vera Sans", "Verdana";
-font-size: 13px;
-color: #333;
+body, input, select, textarea {
+font: 12px/1.5 dotum,sans-serif;
 }
 
+html, body {
+color: #333333;
+}
 h1 {
 font-size: 28px;
 color: #000;
@@ -26,20 +18,102 @@ text-decoration: none;
 }
 
 #page {
-background-color: #ddd;
-width: 750px;
-margin: auto;
-margin-left: auto;
-padding-left: 0px;
-margin-right: auto;
+margin: 0 auto;
+padding: 10px 20px 20px 20px;
+width: 880px;
+background: #0b204c;
+border-top: 10px solid #091a3f
 }
 
 #content {
-background-color: white;
+background: #ead9b8;
+height: 100px;
+}
+
+#naver {
+float: left;
 border: 3px solid #aaa;
-border-top: none;
-padding: 25px;
-width: 500px;
+background-color: white;
+margin: 20px 20px 20px 0;
+padding: 10px;
+width: 140px;
+background: #fff
+}
+
+#daum {
+float: left;
+border: 3px solid #bbb;
+background-color: white;
+margin: 20px 20px 20px 0;
+padding: 10px;
+width: 140px;
+background: #eee
+}
+
+#nate {
+float: left;
+border: 3px solid #ccc;
+background-color: white;
+margin: 20px 20px 20px 0;
+padding: 10px;
+width: 140px;
+background: #ddd;
+}
+
+dl, ul, ol, li {
+    list-style: none outside none;
+}
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, textarea, p, blockquote, th, td, input, select, textarea, button {
+margin: 0;
+padding: 0;
+}
+
+.webtoon_visual {
+    background: url("http://i1.daumcdn.net/img-section/cartoon/webtoon_home/bg_toon_top.gif") no-repeat scroll 0 0 #FFFFFF;
+    height: 274px;
+    margin-top: -13px;
+    padding-bottom: 22px;
+    position: relative;
+    width: 978px;
+    z-index: 10;
+}
+
+.webtoon_visual_modify {
+    background: url("http://i1.daumcdn.net/img-section/cartoon/webtoon_home/bg_toon_top.gif") no-repeat scroll 0 0 transparent;
+    height: 274px;
+    margin-top: -3px;
+    padding-bottom: 12px;
+    position: relative;
+    width: 978px;
+    z-index: 10;
+}
+
+.webtoon_visual .thumb li {
+    display: block;
+    height: 57px;
+    padding-left: 1px;
+    position: relative;
+    width: 204px;
+}
+
+.webtoon_visual .thumb .on .border {
+    background: url("http://i1.daumcdn.net/img-section/cartoon/webtoon_home/img_thumb_on.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 48px;
+    left: -1px;
+    position: absolute;
+    top: -1px;
+    width: 202px;
+}
+
+.webtoon_visual .thumb .border {
+    background: url("http://i1.daumcdn.net/img-section/cartoon/webtoon_home/img_thumb_off.png") no-repeat scroll 0 0 transparent;
+    display: block;
+    height: 43px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 189px;
 }
 
 #sidebar {

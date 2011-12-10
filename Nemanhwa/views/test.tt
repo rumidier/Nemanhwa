@@ -1,3 +1,15 @@
-[% FOREACH url IN test %]
-<a href="[% url %]">a</a>
-[% END %]
+    <div id="naver">
+	[% FOREACH url IN daum %]
+	<a href="[% url %]">[% url %]</a></br>
+	[% END %]
+    </div>
+    <div id="daum">
+	[% FOREACH url IN naver %]
+	<a href="[% url %]">[% url %]</a></br>
+	[% END %]
+    </div>
+    <div id="nate">
+	[% FOREACH url IN nate %]
+	<a href="[% url %]">[% url %]</a></br>
+	[% END %]
+  </div>
