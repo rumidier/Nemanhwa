@@ -21,7 +21,7 @@ get '/' => sub {
 get '/category/:category' => sub {
     my $name = param 'category';
     my @items = redis->lrange("youperl:img:cat.$name:0", 0, -1);
-    my $files = items2files(@items);
+    my $files = items2files @items;
  
     template 'images', { images => $files };
 };
@@ -38,7 +38,7 @@ get '/color/:color' => sub {
     my $category = vars->{category};
  
     my @items = redis->smembers("youperl:img:cat.$category.color:0:$color");
-    my $files = items2files(@items);
+    my $files = items2files @items;
     template 'images', { images => $files, color => $color };
 };
 
