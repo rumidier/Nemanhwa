@@ -35,7 +35,6 @@ my $dbh = DBI->connect(
 );
 $dbh->do("set names utf8");
 
-
 for my $site_name ( keys $site ) {
     for my $url_list ( keys $site->{$site_name} ) {
         my $sth = $dbh->prepare("SELECT COUNT(*) FROM site WHERE name=?");

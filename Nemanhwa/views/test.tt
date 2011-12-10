@@ -1,0 +1,3 @@
+[% FOREACH url IN test %]
+<a href="[% url %]">a</a>
+[% END %]

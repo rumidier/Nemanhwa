@@ -1,1 +1,74 @@
-I can code in Christmas! :)
+<div id="page">
+      <div id="sidebar">
+        <ul id="sidebar-items">
+          <li>
+            <h3>Join the community</h3>
+            <ul class="links">
+	    <li> 옆구리[1] </li>
+            </ul>
+          </li>
+          
+          <li>
+            <h3>Browse the documentation</h3>
+
+            <ul class="links">
+              <li>옆구리[2]</li>
+            </ul>
+          </li>
+
+          <li>
+            <h3>Your application's environment</h3>
+
+            <ul>
+	    <li>옆구리[3]</li>
+            </ul>
+
+          </li>
+        </ul>
+
+      </div>
+
+      <div id="content">
+        <div id="header">
+          <h1>head 1</h1>
+          <h2>head 2</h2>
+        </div>
+
+        <div id="getting-started">
+          <h1>Getting started</h1>
+          <h2>Here&rsquo;s how to get dancing:</h2>
+                    
+          <h3><a href="#" id="about_env_link">About your application's environment</a></h3>
+
+          <div id="about-content" style="display: none;">
+            <table>
+            </table>
+          </div>
+
+    <script type="text/javascript">
+    $('#about_env_link').click(function() {
+        $('#about-content').slideToggle('fast', function() {
+            // ok
+        });
+        return( false );
+    });
+    </script>
+
+
+          <ol>          
+            <li>
+              <h2>Tune your application</h2>
+            </li>
+
+            <li>
+              <h2>Add your own routes</h2>
+            </li>
+
+            <li>
+                <h2>Enjoy web development again</h2>
+            </li>
+
+          </ol>
+        </div>
+      </div>
+    </div>

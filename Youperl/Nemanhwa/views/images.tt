@@ -1,0 +1,3 @@
+[% FOREACH file IN images %]
+<a href="/img/[% file %]"><img src="/img/thumb/[% file %]" /></a>
+[% END %]

@@ -27,7 +27,3 @@ engines:
     start_tag: '[%'
     end_tag:   '%]'
 
-plugins:
-  Redis:
-  server: 127.0.0.1:6379
-  debug:  0
