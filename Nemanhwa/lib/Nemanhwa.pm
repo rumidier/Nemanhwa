@@ -34,10 +34,13 @@ get '/' => sub {
 sub s_printf {
     my ( $webtoon_url, $webtoon_code, $webtoon_name, $webtoon_main_image ) = @_;
 
-    my $prin = sprintf( "<img src=%s />$webtoon_name: <a href=$webtoon_url>첫화보기</a>", $webtoon_main_image, $webtoon_code, 1, );
+    my $href  = sprintf( $webtoon_url, $webtoon_code, 1 );
+    my $prin  = sprintf( "<img src=%s />$webtoon_name: <a href=$webtoon_url>첫화보기</a>", $webtoon_main_image, $webtoon_code, 1, );
 
     return $prin;
 }
+
+
 
 get '/daum' => sub {
     template 'daum';
